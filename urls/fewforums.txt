@@ -5,6 +5,7 @@ wikipedia.org
 github.com
 raw.githubusercontent.com
 arxiv.org
+wordpress.org
 
 livejournal.com
 lesswrong.com
