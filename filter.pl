@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# written by gpt-5, may contain hallucins, not tested
+# written by gpt-5, may contain hallucins, successfully tested
 
 use strict;
 use warnings;
