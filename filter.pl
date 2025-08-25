@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# written by gpt-5, may contain hallucins, successfully tested
+# written by gpt-5, may contain hallucins, not tested
 
 use strict;
 use warnings;
@@ -33,10 +33,11 @@ my $DOMAIN_RE = $have_domains ? $ra->re : qr/(?!)/;
 
 # Single precompiled regex:
 # - start of line (m) with exactly one space after the colon
-# - optional scheme, optional www.
+# - optional scheme
+# - zero or more RFC-compliant subdomain labels (1–63 chars, alnum with internal hyphens, not leading/trailing) + dot
 # - one of the domains (trie-compressed)
 # - boundary after the domain: / ? # : CR LF or end
-my $TARGET_URI_RE = qr/^WARC-Target-URI:\x20(?:(?:https?:\/\/)?(?:www\.)?)$DOMAIN_RE(?=[\/?#:]|\r|\n|$)/mi;
+my $TARGET_URI_RE = qr/^WARC-Target-URI:\x20(?:https?:\/\/)?(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)*$DOMAIN_RE(?=[\/?#:]|\r|\n|$)/mi;
 
 sub emit_if_match {
     my ($rec) = @_;
