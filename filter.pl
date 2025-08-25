@@ -17,17 +17,19 @@ open my $dfh, '<', $domains_file or exit 2;
 
 # Build a trie-based regex over all domains (case-insensitive match will be handled by /i)
 my $ra = Regexp::Assemble->new;
+my $have_domains = 0;
 while (my $line = <$dfh>) {
     $line =~ s/\r?\n\z//;
     $line =~ s/^\s+|\s+$//g;
     next if $line eq '' || $line =~ /^#/;
     my $d = lc $line;             # normalize case for hostnames
-    $ra->add("\\Q$d\\E");         # treat as a literal string
+    $ra->add(quotemeta($d));      # treat as a literal string
+    $have_domains = 1;
 }
 close $dfh;
 
 # If no domains, create a never-matching regex
-my $DOMAIN_RE = $ra->count ? $ra->re : qr/(?!)/;
+my $DOMAIN_RE = $have_domains ? $ra->re : qr/(?!)/;
 
 # Single precompiled regex:
 # - start of line (m) with exactly one space after the colon
