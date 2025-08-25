@@ -25,7 +25,8 @@ for p in {1..165}; do curl -sL "https://searchmysite.net/search/browse/?page=$p"
 s5/s5cmd ls 's3://commoncrawl/crawl-data/CC-MAIN-2025-33/segments/*/wet/*.warc.wet.gz' | awk '{print $NF}'
 
 # download, process, store (CPU-bottlenecked, 32 threads)
-s5/s5cmd ls 's3://commoncrawl/crawl-data/CC-MAIN-2025-33/segments/*/wet/*.warc.wet.gz' | awk '{print $NF}' | parallel -j32 --bar --group 'mkdir -p data/{//} && s5/s5cmd cat s3://commoncrawl/crawl-data/CC-MAIN-2025-33/segments/{} | zcat | ccfilter/filter.pl ccfilter/urls/top1k.txt > data/{.}'
+s5/s5cmd ls 's3://commoncrawl/crawl-data/CC-MAIN-2025-33/segments/*/wet/*.warc.wet.gz' > paths.txt
+cat paths.txt | awk '{print $NF}' | parallel -j32 --bar --group 'mkdir -p data/{//} && s5/s5cmd cat s3://commoncrawl/crawl-data/CC-MAIN-2025-33/segments/{} | zcat | ccfilter/filter.pl ccfilter/urls/top1k.txt > data/{.}'
 ```
 
 #### Why filter?
