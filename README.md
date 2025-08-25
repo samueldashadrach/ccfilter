@@ -30,7 +30,7 @@ s5/s5cmd ls 's3://commoncrawl/crawl-data/CC-MAIN-2025-33/segments/*/wet/*.warc.w
 
 #### Why filter?
 
-full data (compressed) is almost a petabyte, might be too expensive to process without doing some filtering first
+full data (compressed) is 800 TB, can filter using this script, before further processing for your use case
 
 regex below includes CC-MAIN-2013-20 to CC-MAIN-2025-33 (both inclusive), excludes CC-MAIN-2008-2009, CC-MAIN-2009-2010, CC-MAIN-2012
 
