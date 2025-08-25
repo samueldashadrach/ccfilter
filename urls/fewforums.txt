@@ -1,0 +1,9 @@
+reddit.com
+old.reddit.com
+m.reddit.com
+ssl.reddit.com
+new.reddit.com
+blog.reddit.com
+
+lesswrong.com
+news.ycombinator.com
