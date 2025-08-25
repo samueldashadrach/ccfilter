@@ -7,6 +7,8 @@ Disclaimer
 
 Bash and Perl pipeline to filter entire commoncrawl based on a static list of urls. Tested successfully.
 
+url list supplied **must not** contain http, https, www, terminating slash
+
 #### How to run
 
 ```

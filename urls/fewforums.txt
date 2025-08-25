@@ -42,6 +42,12 @@ pages.github.com
 api.github.com
 wiki.github.com
 
+arxiv.org
+eartharxiv.org
+export.arxiv.org
+browse.arxiv.org
+
+
 wikileaks.org
 file.wikileaks.org
 
