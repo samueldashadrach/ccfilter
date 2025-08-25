@@ -11,7 +11,7 @@ url list supplied **must not** contain http, https, www, terminating slash
 
 #### How to run
 
-OPTIONAL: download datasets
+OPTIONAL: download fresh copy of datasets
 ```
 cd ccfilter/urls
 
@@ -25,13 +25,9 @@ curl -fsSL 'https://raw.githubusercontent.com/kevquirk/512kb.club/refs/heads/mai
 ```
 
 ```
-# install dependencies
 sudo apt install parallel -y && sudo apt install cpanminus -y && cpanm Regexp::Assemble && mkdir s5/ && wget -qO- https://github.com/peak/s5cmd/releases/download/v2.3.0/s5cmd_2.3.0_Linux-64bit.tar.gz | tar -xzf - -C s5/
 
-# OPTIONAL: dry run
-s5/s5cmd ls 's3://commoncrawl/crawl-data/CC-MAIN-2025-33/segments/*/wet/*.warc.wet.gz' | awk '{print $NF}'
-
-# download, process, store (CPU-bottlenecked, 32 threads)
+# assumes 32 threads
 s5/s5cmd ls 's3://commoncrawl/crawl-data/CC-MAIN-2025-33/segments/*/wet/*.warc.wet.gz' > paths.txt
 cat paths.txt | awk '{print $NF}' | parallel -j32 --bar --group 'mkdir -p data/{//} && s5/s5cmd cat s3://commoncrawl/crawl-data/CC-MAIN-2025-33/segments/{} | zcat | ccfilter/filter.pl ccfilter/urls/top1k.txt > data/{.}'
 ```
