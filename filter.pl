@@ -37,7 +37,7 @@ sub emit_if_match {
     for my $d (@domains) {
         my $dd = lc $d;
         if (
-            index($u, "$dd")              != -1 ||
+            # index($u, "$dd")              != -1 ||
             index($u, "http://$dd")       != -1 ||
             index($u, "https://$dd")      != -1 ||
             index($u, "http://www.$dd")   != -1 ||
