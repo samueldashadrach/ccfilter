@@ -1,9 +1,10 @@
 #!/usr/bin/env perl
 
-# written by gpt-5, may contain hallucins, successfully tested
+# written by gpt-5, may contain hallucins, not tested
 
 use strict;
 use warnings;
+use Regexp::Assemble;
 
 # Preserve exact bytes (including CRLF)
 binmode(STDIN,  ':raw');
@@ -13,41 +14,37 @@ binmode(STDOUT, ':raw');
 my $domains_file = shift @ARGV // '';
 exit 2 unless $domains_file ne '';
 open my $dfh, '<', $domains_file or exit 2;
-my @domains;
+
+# Build a trie-based regex over all domains (case-insensitive match will be handled by /i)
+my $ra = Regexp::Assemble->new;
 while (my $line = <$dfh>) {
     $line =~ s/\r?\n\z//;
     $line =~ s/^\s+|\s+$//g;
     next if $line eq '' || $line =~ /^#/;
-    push @domains, lc $line;
+    my $d = lc $line;             # normalize case for hostnames
+    $ra->add("\\Q$d\\E");         # treat as a literal string
 }
 close $dfh;
 
-my $delim = "\r\n\r\nWARC/1.0";  # delimiter belongs to the start of the next record
-my $dlen  = length($delim);
-my $buf   = '';
+# If no domains, create a never-matching regex
+my $DOMAIN_RE = $ra->count ? $ra->re : qr/(?!)/
+
+# Single precompiled regex:
+# - start of line (m) with exactly one space after the colon
+# - optional scheme, optional www.
+# - one of the domains (trie-compressed)
+# - boundary after the domain: / ? # : CR LF or end
+my $TARGET_URI_RE = qr/^WARC-Target-URI:\x20(?:(?:https?:\/\/)?(?:www\.)?)$DOMAIN_RE(?=[\/?#:]|\r|\n|$)/mi;
 
 sub emit_if_match {
     my ($rec) = @_;
     return unless length $rec;
-
-    my ($uri) = $rec =~ /^WARC-Target-URI:\s*(\S+)/mi;
-    return unless defined $uri && length $uri;
-
-    my $u = lc $uri;
-    for my $d (@domains) {
-        my $dd = lc $d;
-        if (
-            # index($u, "$dd")              != -1 ||
-            index($u, "http://$dd")       != -1 ||
-            index($u, "https://$dd")      != -1 ||
-            index($u, "http://www.$dd")   != -1 ||
-            index($u, "https://www.$dd")  != -1
-        ) {
-            print $rec;
-            last;
-        }
-    }
+    print $rec if $rec =~ $TARGET_URI_RE;
 }
+
+my $delim = "\r\n\r\nWARC/1.0";  # delimiter belongs to the start of the next record
+my $dlen  = length($delim);
+my $buf   = '';
 
 my $chunk;
 while (read(STDIN, $chunk, 65536)) {
@@ -70,4 +67,3 @@ while (read(STDIN, $chunk, 65536)) {
 
 # Emit the final record
 emit_if_match($buf) if length $buf;
-
