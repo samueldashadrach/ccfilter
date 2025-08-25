@@ -10,7 +10,7 @@ Bash and Perl pipeline to filter entire commoncrawl based on a static list of ur
 #### How to run
 
 ```
-sudo apt install parallel -y
+sudo apt install parallel -y && sudo apt install cpanminus -y && cpanm Regexp::Assemble
 
 # download s5, basically aws-cli with parallelism and regex support
 mkdir s5/ && wget -qO- https://github.com/peak/s5cmd/releases/download/v2.3.0/s5cmd_2.3.0_Linux-64bit.tar.gz | tar -xzf - -C s5/

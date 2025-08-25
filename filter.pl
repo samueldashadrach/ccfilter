@@ -27,7 +27,7 @@ while (my $line = <$dfh>) {
 close $dfh;
 
 # If no domains, create a never-matching regex
-my $DOMAIN_RE = $ra->count ? $ra->re : qr/(?!)/
+my $DOMAIN_RE = $ra->count ? $ra->re : qr/(?!)/;
 
 # Single precompiled regex:
 # - start of line (m) with exactly one space after the colon
