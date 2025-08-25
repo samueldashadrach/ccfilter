@@ -17,7 +17,7 @@ sudo apt install parallel -y && sudo apt install cpanminus -y && cpanm Regexp::A
 mkdir data/ && wget -qO- https://www.domcop.com/files/top/top10milliondomains.csv.zip | funzip | awk -F'","' 'NR>1{print $2} NR==1001{exit}' > ccfilter/urls/top1000.txt
 
 # OPTIONAL: download latest all urls from searchmysite.net
-for p in {1..165}; do curl -sL "https://searchmysite.net/search/browse/?page=$p" | htmlq -a href 'table.sms-browse tbody tr.search-result .result-title > a[href^="http"]'; done > ccfilter/urls/searchmysite.txt
+for p in {1..165}; do curl -sL "https://searchmysite.net/search/browse/?page=$p" | htmlq -a href 'table.sms-browse tbody tr.search-result .result-title > a[href^="http"]'; done | sed -E 's#^https?://##; s#/$##' > ccfilter/urls/searchmysite.txt
 
 # OPTIONAL: dry run
 s5/s5cmd ls 's3://commoncrawl/crawl-data/CC-MAIN-2025-33/segments/*/wet/*.warc.wet.gz' | awk '{print $NF}'
