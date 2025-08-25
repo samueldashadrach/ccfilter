@@ -70,3 +70,4 @@ while (read(STDIN, $chunk, 65536)) {
 
 # Emit the final record
 emit_if_match($buf) if length $buf;
+
