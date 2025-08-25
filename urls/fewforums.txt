@@ -29,6 +29,19 @@ de.wikipedia.org
 fr.wikipedia.org
 es.wikipedia.org
 
+github.com
+raw.githubusercontent.com
+gist.github.com
+docs.github.com
+help.github.com
+github.blog
+raw.github.com
+developer.github.com
+guides.github.com
+pages.github.com
+api.github.com
+wiki.github.com
+
 wikileaks.org
 file.wikileaks.org
 
