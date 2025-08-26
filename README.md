@@ -42,3 +42,41 @@ regex below includes CC-MAIN-2013-20 to CC-MAIN-2025-33 (both inclusive), exclud
 root@ubuntu-8gb-fsn1-1:~# s5/s5cmd du "s3://commoncrawl/crawl-data/CC-MAIN-20??-??/segments/*/wet/*"
 896855474262727 bytes in 7216667 objects: s3://commoncrawl/crawl-data/CC-MAIN-20??-??/segments/*/wet/*
 ```
+
+#### Benchmarks (Bad estimates)
+
+using Hetzner AMD Ryzen threadripper 2950X 32 threads
+ - fewforums2.txt (old version)
+   - data out/in = 275 MB out / (500 * 60 MB in) = 0.009
+   - estimated data out = 0.009 * 800 TB = 7.2 TB
+   - estimated time = 1d 4h / snap
+ - top100.txt
+   - data out/in = 466 MB out / (500 * 60 MB in) = 0.016
+   - estimated time = 1d 4h / snap
+ - top1k.txt
+   - data out/in = 1.9 GB / (500 * 60 MB in) = 0.063
+   - estimated time = 1d 4h / snap
+ - top10k.txt
+   - data out/in = 6 GB / (533 * 60 MB in) = 0.19
+   - estimated time = 1d 4h / snap
+ - social.txt
+   - data out/in = 216 MB / (578 * 60 MB in) = 0.006
+   - estimated time = 1d 4h / snap
+ - final.txt (contains fewforums.txt, social.txt, searchmysite.txt, 512kb.txt)
+   - data out/in = 551 MB / (508 * 60 MB in) = 0.018
+   - estimated data out = 0.018 * 800 TB = 14.4 TB
+   - estimated time = 1d 4h / snap
+ - libgen, annas archive not found in commoncrawl, checked using ccfilter, and also checked at: https://index.commoncrawl.org
+
+
+in general
+ - estimated time = ~1 day/snap => estimated cost = ~1 day/snap * $100/mo * 115 snaps = ~$115
+ - estimated data out = 800 TB * data out/in
+
+theoretical optimal
+ - single machine
+   - estimated time = 800 TB / (0.1 GB/s) = 3 months
+ - parallelise across enough machines
+   - estimated time = 0
+
+
